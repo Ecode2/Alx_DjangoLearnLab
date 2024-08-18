@@ -28,4 +28,7 @@ class Librarian(models.Model):
 class UserProfile(models.Model):
     "Admin", "Member"
 
-"class Meta", "permissions"
+class Meta:
+    "permissions"
+
+    "can_add_book", "can_change_book", "can_delete_book"
