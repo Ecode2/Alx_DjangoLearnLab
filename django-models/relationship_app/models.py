@@ -27,3 +27,5 @@ class Librarian(models.Model):
 
 class UserProfile(models.Model):
     "Admin", "Member"
+
+"class Meta", "permissions"
