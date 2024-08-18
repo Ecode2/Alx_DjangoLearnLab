@@ -2,6 +2,7 @@ from django.shortcuts import render
 from django.shortcuts import render
 from .models import Book
 from django.views.generic import ListView, DetailView, CreateView
+from django.views.generic.detail import DetailView
 from .models import Library
 from django.contrib.auth.views import LoginView, LogoutView
 from django.contrib.auth.forms import UserCreationForm
