@@ -14,12 +14,12 @@ def book_list(request):
 
 class LibraryDetailView(DetailView):
     model = Library
-    template_name = 'library_detail.html'
+    template_name = 'relationship_app/library_detail.html'
     context_object_name = 'library'
 
 class LibraryBookListView(ListView):
     model = Book
-    template_name = 'library_book_list.html'
+    template_name = 'relationship_app/library_book_list.html'
     context_object_name = 'books'
 
     def get_queryset(self):
@@ -28,7 +28,7 @@ class LibraryBookListView(ListView):
     
 class UserRegistrationView(CreateView):
     form_class = UserCreationForm
-    template_name = 'registration.html'
+    template_name = 'relationship_app/registration.html'
     success_url = '/'
 
 class UserLoginView(LoginView):
