@@ -13,3 +13,4 @@ urlpatterns = [
     
 ]
 """ path('register/', SignUpView.as_view(), name='register'), """
+"views.register", "LogoutView.as_view(template_name="
