@@ -8,9 +8,11 @@ from django.contrib.auth.views import LoginView, LogoutView
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import login
 
+def Admin(request):
+    user UserProfile.objects.all()
 
 # Create your views here.
-def kfj (request):
+def books(request):
     
     books = Book.objects.all()
     context = {'books': books}
