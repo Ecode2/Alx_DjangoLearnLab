@@ -7,6 +7,7 @@ from .models import Library
 from django.contrib.auth.views import LoginView, LogoutView
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import login
+from django.contrib.auth.decorators import user_passes_test
 
 def Admin(request):
     user UserProfile.objects.all()
@@ -44,3 +45,20 @@ class UserLoginView(LoginView):
 
 class UserLogoutView(LogoutView):
     next_page = '/'
+
+
+
+@user_passes_test(lambda u: u.is_superuser)
+def admin_view(request):
+    # Code for admin view
+    pass
+
+@user_passes_test(lambda u: u.groups.filter(name='Librarians').exists())
+def librarian_view(request):
+    # Code for librarian view
+    pass
+
+@user_passes_test(lambda u: u.groups.filter(name='Members').exists())
+def member_view(request):
+    # Code for member view
+    pass

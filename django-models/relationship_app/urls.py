@@ -11,7 +11,13 @@ urlpatterns = [
     # Add the following URL patterns for authentication views
     path('login/', LoginView.as_view(template_name='registration/login.html'), name='login'),
     path('logout/', LogoutView.as_view(), name='logout'),
+    path('register/', SignUpView.as_view(), name='register'),
+    path('admin/', views.AdminView.as_view(), name='admin'),
+    path('librarian/', views.LibrarianView.as_view(), name='librarian'),
+    path('member/', views.MemberView.as_view(), name='member'),
     
 ]
+
+
 """ path('register/', SignUpView.as_view(), name='register'), """
 "views.register", "LogoutView.as_view(template_name="
