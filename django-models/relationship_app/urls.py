@@ -15,7 +15,7 @@ urlpatterns = [
     path('admin/', views.AdminView.as_view(), name='admin'),
     path('librarian/', views.LibrarianView.as_view(), name='librarian'),
     path('member/', views.MemberView.as_view(), name='member'),
-    
+    "add_book/", "edit_book/", "delete_book"
 ]
 
 
