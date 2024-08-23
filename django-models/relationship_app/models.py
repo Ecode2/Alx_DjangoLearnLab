@@ -26,7 +26,8 @@ class Librarian(models.Model):
 
 
 class UserProfile(models.Model):
-    "Admin", "Member"
+    role = models.CharField(max_length=100, default="Admin",) 
+    "Member"
 
 class Meta:
     "permissions"
