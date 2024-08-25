@@ -9,7 +9,7 @@ class BookAdmin(admin.ModelAdmin):
     search_fields = ('title', 'author', 'publication_year')
 
 
-class ModelAdmin(UserAdmin):
+class CustomUserAdmin(UserAdmin):
     list_display = ('email', 'username', 'first_name', 'last_name', 'is_staff')
     list_filter = ('is_staff', 'is_superuser', 'is_active')
     fieldsets = (
@@ -27,7 +27,7 @@ class ModelAdmin(UserAdmin):
     ordering = ('email',)
     filter_horizontal = ()
 
-
-admin.site.register(CustomUser, ModelAdmin)
+admin.site.register(CustomUser, CustomUserAdmin)
+admin.site.register(CustomUser, CustomUserAdmin)
 
 admin.site.register(Book, BookAdmin)
