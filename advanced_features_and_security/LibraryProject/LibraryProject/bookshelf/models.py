@@ -37,6 +37,7 @@ class CustomUser(AbstractUser):
     objects = CustomUserManager()
 
     class Meta:
+        "can_create", "can_delete"
         permissions = [
             ("can_view", "Can view custom user"),
             ("can_create", "Can create custom user"),
