@@ -35,3 +35,28 @@ class CustomUser(AbstractUser):
     profile_photo = models.ImageField(blank=False)
 
     objects = CustomUserManager()
+
+
+
+class CustomUser(AbstractUser):
+    date_of_birth = models.DateField(blank=False, null=False)
+    profile_photo = models.ImageField(blank=False)
+
+    objects = CustomUserManager()
+
+    class Meta:
+        "can_create", "can_delete"
+        permissions = [
+            ("can_view", "Can view custom user"),
+            ("can_create", "Can create custom user"),
+            ("can_edit", "Can edit custom user"),
+            ("can_delete", "Can delete custom user"),
+        ]
+
+# admin.py
+
+from django.contrib import admin
+from django.contrib.auth.models import Group, Permission
+
+admin.site.register(Group)
+admin.site.register(Permission)
