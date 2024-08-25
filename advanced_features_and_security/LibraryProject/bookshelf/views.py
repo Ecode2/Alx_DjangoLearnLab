@@ -4,6 +4,7 @@ from django.contrib.auth.decorators import login_required, permission_required
 from .models import Book
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.clickjacking import xframe_options_exempt
+from .forms import ExampleForm
 # Create your views here.
 @permission_required('app_name.can_edit', raise_exception=True)
 def my_view(request):
