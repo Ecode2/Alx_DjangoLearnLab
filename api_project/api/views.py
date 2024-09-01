@@ -1,8 +1,8 @@
 from django.shortcuts import render
 
+import rest_framework
 from rest_framework import generics 
 from rest_framework import viewsets 
-from rest_framework.permissions import IsAuthenticated
 from rest_framework.authtoken.views import ObtainAuthToken
 from rest_framework.authtoken.models import Token
 from rest_framework.response import Response
@@ -18,7 +18,7 @@ class BookList(generics.ListAPIView):
 class BookViewSet(viewsets.ModelViewSet):
     queryset=Book.objects.all()
     serializer_class=BookSerializer
-    permission_classes=[IsAuthenticated]
+    permission_classes=[rest_framework.permissions.IsAuthenticated]
 
 class ObtainTokenView(ObtainAuthToken):
     queryset = Book.objects.all()
