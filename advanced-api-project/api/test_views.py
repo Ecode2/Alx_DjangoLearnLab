@@ -13,6 +13,7 @@ factory = APIRequestFactory()
 author = Author.objects.get(name="Abubakar")
 
 """
+self.client.login
 request = factory.get("/api/books")
 request = factory.post("/api/books/create", {"title": "Harry potter and the prisoner of azkaban",
                                              "publication_year": 2003, "author": author})
