@@ -12,7 +12,7 @@ class BookSerializer(serializers.ModelSerializer):
         fields=["title", "publication_year", "author"]
 
     def validate(self, data:Book):
-        if data.publication_year > datetime.now().year():
+        if data["publication_year"] > datetime.now().year:
             raise serializers.ValidationError("Year can not exceed current year")
         return data
 

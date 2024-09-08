@@ -10,13 +10,11 @@ from .models import Book,  Author
 factory = APIRequestFactory()
 
 author = Author.objects.get(name="Abubakar")
-author_seriallizer=AuthorSerializer(author).data
-print(author_seriallizer)
 
 request = factory.get("/api/books")
-request = factory.post("/api/books/create", {"title": "Harry potter and the chamber of secret",
-                                             "publication_year": 2001, "author": author_seriallizer}, format="json")
-request= factory.get("/api/books?search=1&ordering=title")
+request = factory.post("/api/books/create", {"title": "Harry potter and the prisoner of azkaban",
+                                             "publication_year": 2003, "author": author})
+request= factory.get("/api/books?ordering=publication_year")
 
 class BookTests(APITestCase, URLPatternsTestCase):
     
@@ -32,7 +30,7 @@ class BookTests(APITestCase, URLPatternsTestCase):
     def test_book_detail(self):
         response=self.client.get("/api/books/3/")
         #?ordering=title
-        self.assertEqual(response.data, {"title": "Harry potter and the prisoner of azkaban",
-                                        "publication_year": 2003,
-                                        "author": author_seriallizer})
+        self.assertEqual(response.data, {"title": "Harry potter and the goblet of fire",
+                                        "publication_year": 2005,
+                                        "author": author})
         
