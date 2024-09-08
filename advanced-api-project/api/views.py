@@ -34,7 +34,7 @@ class DetailView(generics.RetrieveAPIView):
 class CreateView(generics.CreateAPIView):
     queryset=Book.objects.all()
     serializer_class=BookSerializer
-    permission_classes = [IsAuthenticated]
+    #permission_classes = [IsAuthenticated]
 
 class UpdateView(generics.UpdateAPIView):
     queryset=Book.objects.all()
