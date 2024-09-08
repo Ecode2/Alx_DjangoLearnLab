@@ -11,7 +11,7 @@ class ListView(generics.ListAPIView):
     serializer_class=BookSerializer
     permission_classes = [IsAuthenticatedOrReadOnly]
     filter_backends = [filters.SearchFilter, filters.OrderingFilter]
-    search_fileds = ["title", "publication_year"]
+    search_fileds = ["title", "publication_year", "author"]
     ordering_fileds = ["title", "publication_year"]
     
     def get_queryset(self):
