@@ -5,7 +5,7 @@ from rest_framework.test import APIRequestFactory, APITestCase, URLPatternsTestC
 from rest_framework import status
 
 from .serializers import AuthorSerializer
-
+"from rest_framework import status"
 from .models import Book,  Author
 
 factory = APIRequestFactory()
@@ -27,7 +27,7 @@ class BookTests(APITestCase, URLPatternsTestCase):
     def setUp(self):
         Book.objects.create(title="Harry potter and the prisoner of azkaban",
                             publication_year=2003,
-                            author=author_seriallizer)
+                            author=author)
 
     def test_book_detail(self):
         response=self.client.get("/api/books/3/")
@@ -35,4 +35,4 @@ class BookTests(APITestCase, URLPatternsTestCase):
         self.assertEqual(response.data, {"title": "Harry potter and the goblet of fire",
                                         "publication_year": 2005,
                                         "author": author})
-        
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
