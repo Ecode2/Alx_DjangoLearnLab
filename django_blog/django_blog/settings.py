@@ -56,7 +56,7 @@ ROOT_URLCONF = "django_blog.urls"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": ["blog/templates/"],
+        "DIRS": [ BASE_DIR / "templates"],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
@@ -123,7 +123,7 @@ USE_TZ = True
 
 STATIC_URL = "static/"
 STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, "blog/static/")
+    BASE_DIR / "blog/static",
 ]
 
 # Default primary key field type
