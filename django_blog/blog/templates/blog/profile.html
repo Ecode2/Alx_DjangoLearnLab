@@ -3,9 +3,14 @@
 
 {% block content %}
     <h1>User Profile</h1>
-    <p>user {{user}}</p>
     <p><strong>Username:</strong> {{user.username}} </p>
     <p><strong>Email:</strong> {{user.email}} </p>
     <p><strong>First Name:</strong> {{user.first_name}} </p>
     <p><strong>Last Name:</strong> {{user.last_name}} </p>
+
+    <h2>Edit Profile</h2>
+    <form method="post">
+        {% csrf_token %} {{form.as_p}}
+        <input type="submit" value="Update">
+    </form>
 {% endblock content %}
