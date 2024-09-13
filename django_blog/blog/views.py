@@ -10,7 +10,8 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.views import LogoutView
 from django.contrib.auth import logout
 
-from blog.models import Post
+from .forms import PostForm
+from .models import Post
 
 # Create your views here.
 class SignupView(CreateView):
@@ -55,8 +56,24 @@ class PostList(ListView):
             context["book_list"] = Book.objects.all()
             return context """
 
-@method_decorator(login_required, name="get")
+#@login_required
 class PostDetail(DetailView):
     model=Post
     context_object_name="post"
-    template_name='blog/posts.html'
+    template_name="blog/post.html"
+
+class CreatePost(CreateView, LoginRequiredMixin):
+    model=Post
+    form_class=PostForm
+    fields=["title", "content"]
+    template_name="blog/create_post.html"
+    login_url=reverse_lazy("blog:login")
+    success_url=reverse_lazy("blog:posts")
+
+    def form_valid(self, form):
+        form.instance.author = self.request.user
+        return super().form_valid(form)
+
+    @method_decorator(login_required)
+    def dispatch(self, request, *args, **kwargs):
+        return super().dispatch(request, *args, **kwargs)
