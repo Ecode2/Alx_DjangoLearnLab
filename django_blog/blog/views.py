@@ -14,7 +14,7 @@ from django.contrib.auth.views import LogoutView
 from django.contrib.auth import logout
 
 from .forms import PostForm, UserUpdateForm
-from .models import Post
+from .models import Post, Comment
 
 # Create your views here.
 class SignupView(CreateView):
@@ -106,3 +106,21 @@ class PostDeleteView(DeleteView, LoginRequiredMixin, UserPassesTestMixin):
     model = Post
     template_name = "blog/delete.html"
 
+
+class CommentCreateView(CreateView, LoginRequiredMixin, UserPassesTestMixin):
+    model = Comment
+    template_name = "blog/comment_create.html"
+
+class CommentDetailView(DetailView,  LoginRequiredMixin, UserPassesTestMixin):
+    model = Comment
+    template_name = "blog/comment_detail.html"
+
+
+class CommentUpdateView(UpdateView,  LoginRequiredMixin, UserPassesTestMixin):
+    model = Comment
+    template_name = "blog/comment_update.html"
+
+
+class CommentDeleteView(DeleteView,  LoginRequiredMixin, UserPassesTestMixin):
+    model = Comment
+    template_name = "blog/comment_delete.html"

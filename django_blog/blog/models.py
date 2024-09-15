@@ -13,3 +13,10 @@ class Post(models.Model):
     
 """ class CustomUser(AbstractUser):
     pass """
+
+class Comment(models.Model):
+    post= models.ForeignKey(Post, on_delete=models.CASCADE)
+    author=models.ForeignKey(User, on_delete=models.CASCADE)
+    content=models.TextField()
+    created_at=models.DateTimeField()
+    created_at=models.DateTimeField()
