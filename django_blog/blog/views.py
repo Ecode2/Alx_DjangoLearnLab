@@ -74,7 +74,7 @@ class PostList(ListView):
             context = super().get_context_data(**kwargs)
             # Add in a QuerySet of all the books
             context["book_list"] = Book.objects.all()
-            return context """
+            return context """  
 
 #@login_required
 
