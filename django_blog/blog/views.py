@@ -4,7 +4,7 @@ from django.forms import BaseModelForm
 from django.http import HttpRequest, HttpResponse
 from django.shortcuts import redirect, render
 from django.views.generic import ListView, DetailView, TemplateView, CreateView, UpdateView, DeleteView
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 from django.contrib.auth.models import User
 from django.urls import reverse_lazy
@@ -77,16 +77,11 @@ class PostList(ListView):
             return context """
 
 #@login_required
-class PostDetail(DetailView):
-    model=Post
-    context_object_name="post"
-    template_name="blog/post.html"
 
-class CreatePost(CreateView, LoginRequiredMixin):
+class PostCreateView(CreateView, LoginRequiredMixin):
     model=Post
     form_class=PostForm
-    fields=["title", "content"]
-    template_name="blog/create_post.html"
+    template_name="blog/create.html"
     login_url=reverse_lazy("blog:login")
     success_url=reverse_lazy("blog:posts")
 
@@ -98,7 +93,16 @@ class CreatePost(CreateView, LoginRequiredMixin):
     def dispatch(self, request, *args, **kwargs):
         return super().dispatch(request, *args, **kwargs)
     
-class UpdatePost(UpdateView, LoginRequiredMixin):
+class PostDetailView(DetailView):
+    model=Post
+    context_object_name="post"
+    template_name="blog/post.html"
+
+class PostUpdateView(UpdateView, LoginRequiredMixin, UserPassesTestMixin):
         model = Post
-        template_name = "blog/create_post.html"
-    
+        template_name = "blog/update.html"
+
+class PostDeleteView(DeleteView, LoginRequiredMixin, UserPassesTestMixin):
+    model = Post
+    template_name = "blog/delete.html"
+

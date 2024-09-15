@@ -1,7 +1,11 @@
 from django.urls import path, include, reverse_lazy
 from django.contrib.auth.views import LoginView, LogoutView
 
-from .views import HomeView, PostList, SignupView, PostDetail, ProfileView, CustomLogoutView
+from .views import (HomeView, PostList, SignupView, 
+                    PostDetailView, ProfileView, 
+                    CustomLogoutView, PostUpdateView,
+                    PostCreateView, PostDeleteView)
+
 
 app_name = "blog"
 
@@ -11,6 +15,9 @@ urlpatterns = [
     path("register/", SignupView.as_view(), name="register"),
     path("profile/", ProfileView.as_view(), name="profile"),
     path("posts/", PostList.as_view(), name="posts"),
-    path("posts/<int:pk>/", PostDetail.as_view(), name="post"),
+    path("posts/<int:pk>/", PostDetailView.as_view(), name="post"),
+    path("posts/new/", PostCreateView.as_view(), name="create"),
+    path("posts/<int:pk>/update/", PostUpdateView.as_view(), name="update"),
+    path("posts/<int:pk>/delete/", PostDeleteView.as_view(), name="delete"),
     path("", HomeView.as_view(), name="home"),
 ]

@@ -1,5 +1,5 @@
 run:
-	python manage.py runserver
+	python manage.py runserver 8080
 
 db:
 	python manage.py makemigrations
