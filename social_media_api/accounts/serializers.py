@@ -5,18 +5,18 @@ from django.contrib.auth import get_user_model
 from .models import CustomUser
 
 class UserSerializer(serializers.ModelSerializer):
-    password = serializers.CharField(write_only=True)
+    password = serializers.CharField()
     token = serializers.SerializerMethodField()
 
     class Meta:
         model = CustomUser
         fields = ['id', 'username', 'email', 'password', 'bio', 'profile_picture', 'followers', 'token']
-        #extra_kwargs = {'password': {'write_only': True}}
+        extra_kwargs = {'password': {'write_only': True}}
         read_only_fields = ['id', 'token']
 
     
     def get_token(self, obj):
-        token, created = Token.objects.get_or_create(user=obj)
+        token = Token.objects.create(user=obj)
         return token.key
 
     def create(self, validated_data):
