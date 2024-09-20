@@ -10,8 +10,3 @@ urlpatterns = [
     path("profile/", views.ProfileView.as_view(), name="profile"),
     path("api-token-auth/", vs.obtain_auth_token, name="api-token-auth"),
 ]
-""" 
-{
-    "token": "b749ea2aef115e683b45f93dae52c71c35d074d4",
-    "token_type": "Token"
-} """
