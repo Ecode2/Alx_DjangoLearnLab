@@ -13,6 +13,9 @@ class RegisterView(generics.CreateAPIView):
     queryset = CustomUser.objects.all()
     serializer_class = UserSerializer
     permission_classes = [permissions.AllowAny]
+    
+    ##CustomUser.objects.create_user(username='admin', password='admin')
+    ##get_user_model().objects.create_user
 
 class LoginView(generics.GenericAPIView):
     serializer_class = UserSerializer
@@ -26,7 +29,7 @@ class LoginView(generics.GenericAPIView):
         user = authenticate(request, username=username, email=email, password=password)
         if user:
             login(request, user)
-            token, created = Token.objects.get_or_create(user=user)
+            token, created = Token.objects.create(user=user)
             return response.Response({"token": token.key, 
                                       "token_type": "Token"})
         else:
