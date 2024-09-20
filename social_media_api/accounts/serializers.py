@@ -1,21 +1,36 @@
 from rest_framework import serializers
+from rest_framework.authtoken.models import Token
+from django.contrib.auth import get_user_model
+
 from .models import CustomUser
 
 class UserSerializer(serializers.ModelSerializer):
+    password = serializers.CharField(write_only=True)
+    token = serializers.SerializerMethodField()
+
     class Meta:
         model = CustomUser
-        fields = ['id', 'username', 'email', 'password', 'bio', 'profile_picture', 'followers']
-        extra_kwargs = {'password': {'write_only': True}}
-        read_only_fields = ['id']
+        fields = ['id', 'username', 'email', 'password', 'bio', 'profile_picture', 'followers', 'token']
+        #extra_kwargs = {'password': {'write_only': True}}
+        read_only_fields = ['id', 'token']
+
+    
+    def get_token(self, obj):
+        token, created = Token.objects.get_or_create(user=obj)
+        return token.key
 
     def create(self, validated_data):
 
-        user = CustomUser.objects.create_user(
+        user = get_user_model().objects.create_user(
             username=validated_data["username"],
             email=validated_data["email"],
             password=validated_data["password"]
         )
         return user
     
+class UserProfileSerializer(serializers.ModelSerializer):
+    followers = UserSerializer(many=True, read_only=True)
 
-#followers = UserSerializer(many=True, read_only=True)
+    class Meta:
+        model = CustomUser
+        fields = ['id', 'username', 'email', 'bio', 'profile_picture', 'followers']

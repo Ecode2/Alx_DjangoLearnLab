@@ -5,7 +5,7 @@ from rest_framework.authtoken.models import Token
 
 
 from .models import CustomUser
-from .serializers import UserSerializer
+from .serializers import UserProfileSerializer, UserSerializer
 
 
 # Create your views here.
@@ -13,9 +13,6 @@ class RegisterView(generics.CreateAPIView):
     queryset = CustomUser.objects.all()
     serializer_class = UserSerializer
     permission_classes = [permissions.AllowAny]
-    
-    ##CustomUser.objects.create_user(username='admin', password='admin')
-    ##get_user_model().objects.create_user
 
 class LoginView(generics.GenericAPIView):
     serializer_class = UserSerializer
@@ -29,14 +26,14 @@ class LoginView(generics.GenericAPIView):
         user = authenticate(request, username=username, email=email, password=password)
         if user:
             login(request, user)
-            token, created = Token.objects.create(user=user)
+            token, created = Token.objects.get_or_create(user=user)
             return response.Response({"token": token.key, 
                                       "token_type": "Token"})
         else:
             return response.Response({"error": "Invalid credentials"}, status=status.HTTP_400_BAD_REQUEST)
         
 class ProfileView(generics.RetrieveAPIView):
-    serializer_class = UserSerializer
+    serializer_class = UserProfileSerializer
 
     def get_object(self):
         return self.request.user
