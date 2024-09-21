@@ -2,15 +2,19 @@
 
 {% block content %}
 
-    <h2>{{user}}</h2>
-    {{Posts}}
+    <h2>{{ user }}</h2>
+    {{ Posts }}
+
+    {% comment "" %} <form action="{% url 'search' %}" method="GET">
+        <input type="text" name="query" placeholder="Search...">
+        <button type="submit">Search</button>
+    </form> {% endcomment %}
 
     <ul>
         {% for post in posts %}
             <li>
-                <h3>{{post.title}}</h3>
-                <p>{{post.content}}</p>
-
+                <h3>{{ post.title }}</h3>
+                <p>{{ post.content }}</p>
             </li>
         {% endfor %}
     </ul>

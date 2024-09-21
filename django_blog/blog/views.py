@@ -58,7 +58,6 @@ class ProfileView(LoginRequiredMixin, UpdateView, DetailView):
             return self.form_invalid(form)
     
 
-
 class HomeView(TemplateView):
     template_name = "blog/home.html"
 
@@ -66,8 +65,18 @@ class HomeView(TemplateView):
 class PostList(ListView):
     #model = Post
     context_object_name = 'posts'
-    queryset = Post.objects.order_by("published_date")
     template_name='blog/posts.html'
+
+    def get_queryset(self):
+        query = self.request.GET.get('q')
+        if query:
+            return Post.objects.filter(
+                title__icontains=query,
+                content__icontains=query,
+                tags__name__icontains=query
+            ).distinct()
+        else:
+            return Post.objects.none()
 
     """ def get_context_data(self, **kwargs):
             # Call the base implementation first to get a context
