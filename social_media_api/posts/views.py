@@ -1,10 +1,12 @@
 from django.shortcuts import render
-from rest_framework import generics, permissions, pagination
+from rest_framework import generics, permissions, pagination, viewsets
 
 from .models import Post, Comment
+from .permissions import IsAuthorOrReadOnly
 from .serializers import CommentSerializer, PostSerializer
 
 # Create your views here.
+##viewsets.ModelViewSet
 class LargeResultsSetPagination(pagination.PageNumberPagination):
     page_size = 1000
     page_size_query_param = 'page_size'
@@ -22,14 +24,13 @@ class PostListCreateView(generics.ListCreateAPIView):
     ordering = ['title']
     pagination_class=pagination.PageNumberPagination
 
-
     def perform_create(self, serializer):
         serializer.save(author=self.request.user)
     
 class PostDetailView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Post.objects.all()
     serializer_class = PostSerializer
-    
+    permission_classes=[IsAuthorOrReadOnly]
 
 class CommentListCreateView(generics.ListCreateAPIView):
     queryset = Comment.objects.all()
@@ -42,4 +43,4 @@ class CommentListCreateView(generics.ListCreateAPIView):
 class CommentDetailView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Comment.objects.all()
     serializer_class = CommentSerializer
-    
+    permission_classes=[IsAuthorOrReadOnly]
