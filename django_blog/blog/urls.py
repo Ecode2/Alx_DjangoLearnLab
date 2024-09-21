@@ -12,6 +12,7 @@ from .views import (HomeView, PostList, SignupView,
 app_name = "blog"
 
 ##/tags/<tag_name>/ and /search/.
+##tags/<slug:tag_slug>/", "PostByTagListView.as_view()
 
 urlpatterns = [
     path("login/", LoginView.as_view(template_name="blog/login.html", next_page=reverse_lazy('blog:home')), name="login"),
