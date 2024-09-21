@@ -3,6 +3,7 @@ from django import forms
 from django.contrib.auth.models import User
 from .models import Post, Comment
 
+# TagWidget()", "widgets.SelectMultiple(attrs={"class": "form-control"})
 class PostForm(ModelForm):
     class Meta:
         model = Post
