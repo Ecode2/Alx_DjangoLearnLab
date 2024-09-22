@@ -1,11 +1,11 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from rest_framework import generics, permissions, response, status
 from django.contrib.auth import login, authenticate, logout
 from rest_framework.authtoken.models import Token
 
-
+from .permissions import IsAuthorOrReadOnly
 from .models import CustomUser
-from .serializers import UserProfileSerializer, UserSerializer
+from .serializers import UserProfileSerializer, UserSerializer, FollowSerializer
 
 
 # Create your views here.
@@ -37,3 +37,27 @@ class ProfileView(generics.RetrieveAPIView):
 
     def get_object(self):
         return self.request.user
+    
+class FollowUserView(generics.UpdateAPIView):
+    queryset = CustomUser.objects.all()
+    serializer_class = FollowSerializer
+    permission_classes = [IsAuthorOrReadOnly]
+
+    def update(self, request, *args, **kwargs):
+        user_to_follow = get_object_or_404(CustomUser, id=self.kwargs['user_id'])
+        request.user.following.add(user_to_follow)
+
+        return response.Response({"message":"User followed successfully"}, 
+                                 status=status.HTTP_200_OK)
+
+class UnfollowUserView(generics.UpdateAPIView):
+    queryset = CustomUser.objects.all()
+    serializer_class = FollowSerializer
+    permission_classes = [IsAuthorOrReadOnly]
+
+    def update(self, request, *args, **kwargs):
+        user_to_unfollow = get_object_or_404(CustomUser, id=self.kwargs['user_id'])
+        request.user.following.remove(user_to_unfollow)
+        
+        return response.Response({"message":"User unfollowed successfully"}, 
+                                 status=status.HTTP_200_OK)

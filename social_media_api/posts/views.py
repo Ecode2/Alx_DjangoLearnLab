@@ -2,7 +2,7 @@ from django.shortcuts import render
 from rest_framework import generics, permissions, pagination, viewsets
 
 from .models import Post, Comment
-from .permissions import IsAuthorOrReadOnly
+from accounts.permissions import IsAuthorOrReadOnly
 from .serializers import CommentSerializer, PostSerializer
 
 # Create your views here.
@@ -44,3 +44,4 @@ class CommentDetailView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Comment.objects.all()
     serializer_class = CommentSerializer
     permission_classes=[IsAuthorOrReadOnly]
+    
