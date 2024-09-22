@@ -66,4 +66,5 @@ class FeedView(generics.ListAPIView):
     pagination_class=pagination.PageNumberPagination
 
     def get_queryset(self):
+        #Post.objects.filter(author__in=following_users).order_by", "following.all()", "permissions.IsAuthenticated
         return Post.objects.filter(author__followers__in=[self.request.user]).order_by('-created_at')
