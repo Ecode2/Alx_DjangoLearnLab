@@ -44,7 +44,7 @@ class CommentListCreateView(generics.ListCreateAPIView):
         content = request.data['content']
 
         comment = Comment.objects.create(post=post, author=author, content=content)
-        serializer = CommentSerializer(comment)
+        serializer = CommentSerializer(comment, data=request.data)
 
         if serializer.is_valid():
             serializer.save()
