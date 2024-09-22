@@ -7,6 +7,7 @@ from .permissions import IsAuthorOrReadOnly
 from .models import CustomUser
 from .serializers import UserProfileSerializer, UserSerializer, FollowSerializer
 
+#permissions.IsAuthenticated", "return Response
 
 # Create your views here.
 class RegisterView(generics.CreateAPIView):
