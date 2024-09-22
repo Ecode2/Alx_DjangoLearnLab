@@ -8,4 +8,5 @@ urlpatterns = [
     path("post/<int:pk>/", views.PostDetailView.as_view(), name="post-detail"),
     path("post/<int:post_pk>/comments/", views.CommentListCreateView.as_view(), name="comment-list-create"),
     path("post/<int:post_pk>/comments/<int:pk>/", views.CommentDetailView.as_view(), name="comment-detail"),
+    path("posts/feed/", views.FeedView.as_view(), name="feed"),
 ]

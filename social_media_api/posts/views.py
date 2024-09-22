@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from rest_framework import generics, permissions, pagination, viewsets
+from rest_framework import generics, permissions, pagination, response, status
 
 from .models import Post, Comment
 from accounts.permissions import IsAuthorOrReadOnly
@@ -35,13 +35,35 @@ class PostDetailView(generics.RetrieveUpdateDestroyAPIView):
 class CommentListCreateView(generics.ListCreateAPIView):
     queryset = Comment.objects.all()
     serializer_class = CommentSerializer
-    
+    ordering_fields = ['-created_at']
+    pagination_class=pagination.PageNumberPagination
 
-    def perform_create(self, serializer):
-        serializer.save(author=self.request.user)
+    def post(self, request, *args, **kwargs):
+        post = Post.objects.get(pk=self.kwargs['post_pk'])
+        author = request.user
+        content = request.data['content']
+
+        comment = Comment.objects.create(post=post, author=author, content=content)
+        serializer = CommentSerializer(comment)
+
+        if serializer.is_valid():
+            serializer.save()
+            return response.Response(serializer.data, status=status.HTTP_201_CREATED)
+        
+        return response.Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)              
+        
+    """ def perform_create(self, serializer):
+        serializer.save(author=self.request.user) """
     
 class CommentDetailView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Comment.objects.all()
     serializer_class = CommentSerializer
     permission_classes=[IsAuthorOrReadOnly]
-    
+
+class FeedView(generics.ListAPIView):
+    queryset = Post.objects.all()
+    serializer_class = PostSerializer
+    pagination_class=pagination.PageNumberPagination
+
+    def get_queryset(self):
+        return Post.objects.filter(author__followers__in=[self.request.user]).order_by('-created_at')

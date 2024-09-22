@@ -45,7 +45,7 @@ class FollowUserView(generics.UpdateAPIView):
 
     def update(self, request, *args, **kwargs):
         user_to_follow = get_object_or_404(CustomUser, id=self.kwargs['user_id'])
-        request.user.following.add(user_to_follow)
+        request.user.followers.add(user_to_follow)
 
         return response.Response({"message":"User followed successfully"}, 
                                  status=status.HTTP_200_OK)
@@ -57,7 +57,7 @@ class UnfollowUserView(generics.UpdateAPIView):
 
     def update(self, request, *args, **kwargs):
         user_to_unfollow = get_object_or_404(CustomUser, id=self.kwargs['user_id'])
-        request.user.following.remove(user_to_unfollow)
+        request.user.followers.remove(user_to_unfollow)
         
         return response.Response({"message":"User unfollowed successfully"}, 
                                  status=status.HTTP_200_OK)

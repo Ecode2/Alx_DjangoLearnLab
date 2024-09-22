@@ -16,7 +16,7 @@ class UserSerializer(serializers.ModelSerializer):
 
     
     def get_token(self, obj):
-        token = Token.objects.create(user=obj)
+        token, created = Token.objects.get_or_create(user=obj)
         return token.key
 
     def create(self, validated_data):
@@ -28,8 +28,14 @@ class UserSerializer(serializers.ModelSerializer):
         )
         return user
     
+class PublicUserSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = CustomUser
+        fields = ['id', 'username', 'email', 'bio', 'followers', 'profile_picture']
+    
 class UserProfileSerializer(serializers.ModelSerializer):
-    followers = UserSerializer(many=True, read_only=True)
+    followers = PublicUserSerializer(many=True, read_only=True)
 
     class Meta:
         model = CustomUser
