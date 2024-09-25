@@ -42,7 +42,7 @@ class ProfileView(generics.RetrieveAPIView):
 class FollowUserView(generics.UpdateAPIView):
     queryset = CustomUser.objects.all()
     serializer_class = FollowSerializer
-    permission_classes = [IsAuthorOrReadOnly]
+    permission_classes = [permissions.IsAuthenticated, IsAuthorOrReadOnly]
 
     def update(self, request, *args, **kwargs):
         user_to_follow = get_object_or_404(CustomUser, id=self.kwargs['user_id'])
@@ -51,10 +51,10 @@ class FollowUserView(generics.UpdateAPIView):
         return response.Response({"message":"User followed successfully"}, 
                                  status=status.HTTP_200_OK)
 
-class UnfollowUserView(generics.UpdateAPIView):
+class UnFollowUserView(generics.UpdateAPIView):
     queryset = CustomUser.objects.all()
     serializer_class = FollowSerializer
-    permission_classes = [IsAuthorOrReadOnly]
+    permission_classes = [permissions.IsAuthenticated, IsAuthorOrReadOnly]
 
     def update(self, request, *args, **kwargs):
         user_to_unfollow = get_object_or_404(CustomUser, id=self.kwargs['user_id'])

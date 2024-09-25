@@ -28,3 +28,8 @@ class Comment(models.Model):
     """ def __unicode__(self):
         return 
  """
+
+class Like(models.Model):
+    post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name="likes")
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name="likes_created")
+

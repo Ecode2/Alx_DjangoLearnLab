@@ -5,8 +5,9 @@ from django.contrib.auth import get_user_model
 from .models import CustomUser
 
 class UserSerializer(serializers.ModelSerializer):
-    password = serializers.CharField()
+    #password = serializers.CharField()
     token = serializers.SerializerMethodField()
+    
 
     class Meta:
         model = CustomUser
