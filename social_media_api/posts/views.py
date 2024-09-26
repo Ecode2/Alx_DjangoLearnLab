@@ -95,7 +95,7 @@ class LikeView(generics.ListCreateAPIView):
         post = generics.get_object_or_404(Post, pk=pk)
         user = request.user
 
-        like, create_like = Like.objects.get_or_create(post=post, user=user)
+        like, create_like = Like.objects.get_or_create(user=request.user, post=post)
         serializer = LikeSerializer(like, data=request.data)
 
         if serializer.is_valid():
