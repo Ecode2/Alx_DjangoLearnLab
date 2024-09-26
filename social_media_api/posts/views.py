@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from rest_framework import generics, permissions, pagination, response, status
 
+from notifications.models import Notification
 from .models import Post, Comment, Like
 from accounts.permissions import IsAuthorOrReadOnly
 from .serializers import CommentSerializer, PostSerializer, LikeSerializer
@@ -43,23 +44,16 @@ class CommentListCreateView(generics.ListCreateAPIView):
     
 
     def post(self, request, *args, **kwargs):
-        try:
-            post = Post.objects.get(pk=self.kwargs['post_pk'])
-            author = request.user
-            content = request.data['content']
-        except Exception as e:
-            return response.Response({"status": False, "msg": "post not found"}, status=status.HTTP_404_NOT_FOUND)
 
-        try:
-            check_comment = Comment.objects.get(post=post, author=author)
-            if check_comment:
-                return response.Response({"status": False, "msg": "One comment per user"}, status=status.HTTP_400_BAD_REQUEST)
-        except Exception as e:
-            pass
-        
+        post = generics.get_object_or_404(Post, pk=self.kwargs['post_pk'])
+        author = request.user
+        content = request.data['content']
 
         comment = Comment.objects.create(post=post, author=author, content=content)
         serializer = CommentSerializer(comment, data=request.data)
+
+        notification = Notification.objects.create(recipient=post.author, actor=author, verb=f"{author.username} commented on your post")
+        notification.save()
 
         if serializer.is_valid():
             serializer.save()
@@ -92,24 +86,19 @@ class LikeView(generics.ListCreateAPIView):
         return Like.objects.filter(post_id=self.kwargs['pk'])
 
     def post(self, request, *args, **kwargs):
-        try:
-            post = Post.objects.get(pk=self.kwargs['pk'])
-            user = request.user
-        except Exception as e:
-            return response.Response({"status": False, "msg": "Post not found"}, status=status.HTTP_404_NOT_FOUND)
+        pk=self.kwargs['pk']
+        post = generics.get_object_or_404(Post, pk=pk)
+        user = request.user
 
-        try:
-            check_like = Like.objects.get(post=post, user=user)
-            if check_like:
-                return response.Response({"status": False, "msg": "Post already Liked"}, status=status.HTTP_400_BAD_REQUEST)
-        except Exception as e:
-            pass
-
-        like = Like.objects.create(post=post, user=user)
+        like = Like.objects.get_or_create(post=post, user=user)
         serializer = LikeSerializer(like, data=request.data)
 
         if serializer.is_valid():
             serializer.save()
+
+            notification = Notification.objects.create(recipient=post.author, actor=user, verb=f"{user.username} liked your post")
+            notification.save()
+
             return response.Response(serializer.data, status=status.HTTP_201_CREATED)
         
         return response.Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST) 
@@ -120,11 +109,14 @@ class UnLikeView(generics.DestroyAPIView):
     permission_classes = [permissions.IsAuthenticated, IsAuthorOrReadOnly]
 
     def delete(self, request, *args, **kwargs):
-        try:
-            post = Post.objects.get(pk=self.kwargs['pk'])
-            user = request.user
+        
+        pk=self.kwargs['pk']
+        post = generics.get_object_or_404(Post, pk=pk)
+        user = request.user
 
+        try:
             like = Like.objects.get(post=post, user=user)
+            #like = Like.objects.delete(post=post, user=user)
             if like:
                 like.delete()
                 return response.Response({"status": True, "msg": "Post Unliked"}, status=status.HTTP_200_OK)
