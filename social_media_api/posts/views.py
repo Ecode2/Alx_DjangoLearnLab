@@ -45,14 +45,19 @@ class CommentListCreateView(generics.ListCreateAPIView):
 
     def post(self, request, *args, **kwargs):
 
-        post = generics.get_object_or_404(Post, pk=self.kwargs['post_pk'])
+        pk=self.kwargs['post_pk']
+
+        post = generics.get_object_or_404(Post, pk=pk)
         author = request.user
         content = request.data['content']
 
         comment = Comment.objects.create(post=post, author=author, content=content)
         serializer = CommentSerializer(comment, data=request.data)
 
-        notification = Notification.objects.create(recipient=post.author, actor=author, verb=f"{author.username} commented on your post")
+        notification = Notification.objects.create(recipient=post.author, actor=author, 
+                                                           verb=f"{author.username} commented on your post",
+                                                           target_content_type=Post,
+                                                           target_object_id=pk)
         notification.save()
 
         if serializer.is_valid():
@@ -90,14 +95,19 @@ class LikeView(generics.ListCreateAPIView):
         post = generics.get_object_or_404(Post, pk=pk)
         user = request.user
 
-        like = Like.objects.get_or_create(post=post, user=user)
+        like, create_like = Like.objects.get_or_create(post=post, user=user)
         serializer = LikeSerializer(like, data=request.data)
 
         if serializer.is_valid():
-            serializer.save()
 
-            notification = Notification.objects.create(recipient=post.author, actor=user, verb=f"{user.username} liked your post")
-            notification.save()
+            if create_like:
+                serializer.save()
+
+                notification = Notification.objects.create(recipient=post.author, actor=user, 
+                                                           verb=f"{user.username} liked your post",
+                                                           target_content_type=Post,
+                                                           target_object_id=pk)
+                notification.save()
 
             return response.Response(serializer.data, status=status.HTTP_201_CREATED)
         
